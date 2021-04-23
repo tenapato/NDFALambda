@@ -82,11 +82,15 @@ def transitionFunction(state, string):
     print("String: "+ str(string))
     #print("Estado: " + str(estado)) 
     #print(estado)
-    
+
+    print("Diccionario: " + str(dictAutomata))
     
 
     if string:
         letter = string[0]
+
+
+
         print("Leter: " + str(letter))
         if len(state)>1:
             print("Tiene " + str(len(state)) + " estados")
@@ -99,24 +103,30 @@ def transitionFunction(state, string):
             #print("Prueba: " + str(dictAutomata.get(estado, {}).items()))
             for key, values in dictAutomata.get(estado, {}).items():
                 print("Key: " + str(key))
+            print("Estad: " + str(estado))
             if estado in dictAutomata:
                 l = dictAutomata.get(estado, {}).get("lambda")
                 a = dictAutomata.get(estado, {}).get("a")
                 b = dictAutomata.get(estado, {}).get("b")
                 print("Lambda: " + str(l) + " a: " + str(a) + " b: " + str(b))
-                if l and key == letter:
+                if l and key == letter and not a and not b:
                     estadoTemp = l
                     state.pop(0)
                     state += estadoTemp
                     string.pop(0)
                     transitionFunction(state, string)
-                elif a and key == letter:
+                elif a and key == letter and not l and not b:
+                    print("Entro a A")
+                    print("a: " + str(a))
                     estadoTemp = a
+                    print("Estado temp:" + str(estadoTemp))
+                    #print("State antes del pop de a: " + str(state))
                     state.pop(0)
+                    #print("State despues del pop de a: " + str(state))
                     state += estadoTemp
                     string.pop(0)
                     transitionFunction(state, string)
-                elif b and key == letter:
+                elif b and key == letter and not l and not a:
                     estadoTemp = b
                     print("Estado temp: " + str(estadoTemp))
                     state.pop(0)
@@ -157,6 +167,14 @@ def transitionFunction(state, string):
                 elif b and key == letter:
                     string.pop(0)
                     transitionFunction(b, string)
+                else:
+                    print("No se encontro una transicion con este estado, sacando " + str(state[0]))
+                    # print("Estadossss: " + str(state))
+                    #print("State en el else, antes del pop: "+ str(state))
+                    
+                    string.pop(0)
+                    state.pop(0)
+                    transitionFunction(state, string)
     else:
         print("Ya no hay letras")
         print(Automata.finalState)
@@ -216,7 +234,7 @@ if __name__ == "__main__":
 
     repetidos = []
     
-    print(dictAutomata)
+#    print(dictAutomata)
     
     repetidos = [x for n, x in enumerate(comparar) if x in comparar[:n]]  #find any state that has more than one transition
    
@@ -225,10 +243,13 @@ if __name__ == "__main__":
         for rep in range(len(transitionMatrix)):
             if r == transitionMatrix[rep][0]:
                 dictAutomata[r][transitionMatrix[rep][1]] = transitionMatrix[rep][2]    
-print("------Dictionary 2 --------- ")
-print(dictAutomata)
+#print("------Dictionary 2 --------- ")
+#print(dictAutomata)
 
 
-transitionFunction(Automata.initialState, ['lambda','a','b','b','b','b'])
+transitionFunction(Automata.initialState, ['lambda', 'b', 'b', 'a'])
+
+
+
 
     
