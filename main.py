@@ -78,21 +78,92 @@ def buildAutomata(file):
 
 def transitionFunction(state, string):
     print("State to check: "+ str(state))
-    string = string.split(",")
+    #string = string.split(",")
     print("String: "+ str(string))
-    letter = string[0]
-    print("Leter: " + str(letter))
-    estado = str(state).strip("'[]'")
+    #print("Estado: " + str(estado)) 
     #print(estado)
+    
+    
+
     if string:
-        if estado in dictAutomata:
-            l = dictAutomata.get(estado, {}).get("lambda")
-            a = dictAutomata.get(estado, {}).get("a")
-            b = dictAutomata.get(estado, {}).get("b")
-            print("Lambda: " + str(l) + " a: " + str(a) + " b: " + str(b))
-            if l:
-                string.pop(0)
-                transitionFunction(l, letter)
+        letter = string[0]
+        print("Leter: " + str(letter))
+        if len(state)>1:
+            print("Tiene " + str(len(state)) + " estados")
+            print("Estados: " + str(state))
+            print("Estado en [0]: " + str(state[0]))
+            #state.pop(0)
+            estado = str(state[0]).strip("'[]'")
+            print("Estado despues del strip: " + str(estado))    
+            #print("State despues del pop: " + str(state))
+            #print("Prueba: " + str(dictAutomata.get(estado, {}).items()))
+            for key, values in dictAutomata.get(estado, {}).items():
+                print("Key: " + str(key))
+            if estado in dictAutomata:
+                l = dictAutomata.get(estado, {}).get("lambda")
+                a = dictAutomata.get(estado, {}).get("a")
+                b = dictAutomata.get(estado, {}).get("b")
+                print("Lambda: " + str(l) + " a: " + str(a) + " b: " + str(b))
+                if l and key == letter:
+                    estadoTemp = l
+                    state.pop(0)
+                    state += estadoTemp
+                    string.pop(0)
+                    transitionFunction(state, string)
+                elif a and key == letter:
+                    estadoTemp = a
+                    state.pop(0)
+                    state += estadoTemp
+                    string.pop(0)
+                    transitionFunction(state, string)
+                elif b and key == letter:
+                    estadoTemp = b
+                    print("Estado temp: " + str(estadoTemp))
+                    state.pop(0)
+                    string.pop(0)
+                    state += estadoTemp
+                    print("State despues de concatenar: " + str(state))
+                    
+                    #print(state[0])
+                    #string.pop(0)
+                
+                    transitionFunction(state, string)
+                else:
+                    print("No se encontro una transicion con este estado, sacando " + str(state[0]))
+                   # print("Estadossss: " + str(state))
+                    #print("State en el else, antes del pop: "+ str(state))
+                    if len(state)<1:
+                        string.pop(0)
+                    state.pop(0)
+                    transitionFunction(state, string)
+                
+        else:
+            estado = str(state).strip("'[]'")
+            print("Estado: " + str(dictAutomata.get(estado, {})))
+            for key, values in dictAutomata.get(estado, {}).items():
+                   print("Key: " + str(key))     
+
+            if estado in dictAutomata:
+                l = dictAutomata.get(estado, {}).get("lambda")
+                a = dictAutomata.get(estado, {}).get("a")
+                b = dictAutomata.get(estado, {}).get("b")
+            # print("Lambda: " + str(l) + " a: " + str(a) + " b: " + str(b))
+                if l and key == letter:
+                    string.pop(0)
+                    transitionFunction(l, string)
+                elif a and key == letter:
+                    string.pop(0)
+                    transitionFunction(a, string)
+                elif b and key == letter:
+                    string.pop(0)
+                    transitionFunction(b, string)
+    else:
+        print("Ya no hay letras")
+        print(Automata.finalState)
+        if any (x in state for x in Automata.finalState):
+            print("El string se acepta")
+        else:
+            print("El string se rechaza")
 
 
 if __name__ == "__main__":
@@ -158,6 +229,6 @@ print("------Dictionary 2 --------- ")
 print(dictAutomata)
 
 
-transitionFunction(Automata.initialState, 'b,b,a')
+transitionFunction(Automata.initialState, ['lambda','a','b','b','b','b'])
 
     
