@@ -1,3 +1,20 @@
+'''
+    Patricio Tena Zozaya A01027293
+    Francisco Acuña Franco A01027294
+
+    The following program evaluates a given string in and NDFA-lambda automata given by a text file and returns if the string
+    is accepted or rejected.
+
+    *Notes: 
+    - To this version of the program, it only evaluates a normal NDFA automata.
+    - Further changes are needed to implement the lambda closure and fix remaning bugs
+    - more info about the versions of the program at: https://github.com/tenapato/NDFALambda
+
+'''
+
+
+
+# Automata class for saving the information extacted from the text file
 class Automata:
     states = []
     symbols = []
@@ -5,7 +22,7 @@ class Automata:
     finalState = []
     transitionTable = []
 
-
+# Method for parsing the given text file
 def buildAutomata(file):
     with open(file) as f:
             lines = f.readlines();
@@ -15,24 +32,19 @@ def buildAutomata(file):
     count = 0
     for line in lines:
         count += 1
-        #print(f'line {count}: {line}')
 
-    #print("Total de lineas: " + str(count))
 
     #separating each state and adding it to an array
     states = lines[0].split(",")
     states = ','.join(states).strip()
     states = states.split(",")
 
-    #print(transitionTable)
     A1.states = states
-    #print("States: " + str(states))
 
     A1.states = states
 
     #Separate alphabet symbols
     symbols = lines[1].split(",")
-    #print("Symbols: " + str(symbols))
     symbols = ','.join(symbols).strip()
     symbols = symbols.split(",")
     A1.symbols = symbols
@@ -41,21 +53,16 @@ def buildAutomata(file):
     initialState = lines[2].split(",")
     initialState = ''.join(initialState).strip()
     initialState = initialState.split(",")
-    #print("Initial State: " + str(initialState))
     A1.initialState =  initialState
 
 
     #Assign final state
     finalState = lines[3].split(",")
-    #print("Final State: " + str(finalState))
     finalState = ','.join(finalState).strip()
     finalState = finalState.split(",")
-    #print("Final state 2: " + str(finalState))
 
     A1.finalState = finalState;
 
-    #for i in range(8):
-    #    print(lines[i+4])
 
     #Create the transition
     transitionTable = []
@@ -69,95 +76,65 @@ def buildAutomata(file):
         transitionTable.remove("")
 
     sizeOfTT = len(transitionTable) #Save the size of the transition table to a variable
-    #print(transitionTable)
     A1.transitionTable = transitionTable
 
     return A1
 
 
-
+# For documentation refer to line 192
 def transitionFunction(state, string):
     print("State to check: "+ str(state))
-    #string = string.split(",")
-    print("String: "+ str(string))
-    #print("Estado: " + str(estado)) 
-    #print(estado)
-
-    print("Diccionario: " + str(dictAutomata))
-    
+    #print("Current string to check: "+ str(string))
 
     if string:
         letter = string[0]
 
 
 
-        print("Leter: " + str(letter))
-        if len(state)>1:
-            print("Tiene " + str(len(state)) + " estados")
-            print("Estados: " + str(state))
-            print("Estado en [0]: " + str(state[0]))
-            #state.pop(0)
+        print("Using letter: " + str(letter))
+        if len(state)>1: #This if is accessed if the list of states to validate is more than one
             estado = str(state[0]).strip("'[]'")
-            print("Estado despues del strip: " + str(estado))    
-            #print("State despues del pop: " + str(state))
-            #print("Prueba: " + str(dictAutomata.get(estado, {}).items()))
             for key, values in dictAutomata.get(estado, {}).items():
-                print("Key: " + str(key))
-            print("Estad: " + str(estado))
-            if estado in dictAutomata:
-                l = dictAutomata.get(estado, {}).get("lambda")
+               print("")
+            if estado in dictAutomata: # compares if the given state has a valid transition in the transition table
+                l = dictAutomata.get(estado, {}).get("lambda") # if it does, it adds the value to a new variiable to return
                 a = dictAutomata.get(estado, {}).get("a")
                 b = dictAutomata.get(estado, {}).get("b")
-                print("Lambda: " + str(l) + " a: " + str(a) + " b: " + str(b))
-                if l and key == letter and not a and not b:
+                #print("Lambda: " + str(l) + " a: " + str(a) + " b: " + str(b))
+                if l and key == letter and not a and not b: # this set of ifs ensures that the returning state is the one corresponding to the letter being evaluated
                     estadoTemp = l
                     state.pop(0)
                     state += estadoTemp
                     string.pop(0)
                     transitionFunction(state, string)
                 elif a and key == letter and not l and not b:
-                    print("Entro a A")
-                    print("a: " + str(a))
                     estadoTemp = a
-                    print("Estado temp:" + str(estadoTemp))
-                    #print("State antes del pop de a: " + str(state))
                     state.pop(0)
-                    #print("State despues del pop de a: " + str(state))
                     state += estadoTemp
                     string.pop(0)
                     transitionFunction(state, string)
                 elif b and key == letter and not l and not a:
                     estadoTemp = b
-                    print("Estado temp: " + str(estadoTemp))
                     state.pop(0)
                     string.pop(0)
                     state += estadoTemp
-                    print("State despues de concatenar: " + str(state))
-                    
-                    #print(state[0])
-                    #string.pop(0)
-                
                     transitionFunction(state, string)
-                else:
+                else:  # if it doesnt find a valid state, then it removes the state from the states to validate and returns the next state and the same letter
                     print("No se encontro una transicion con este estado, sacando " + str(state[0]))
-                   # print("Estadossss: " + str(state))
-                    #print("State en el else, antes del pop: "+ str(state))
                     if len(state)<1:
                         string.pop(0)
                     state.pop(0)
                     transitionFunction(state, string)
                 
-        else:
+        else: #if the state to validate is only one, then it enters the same logic as stated above
             estado = str(state).strip("'[]'")
-            print("Estado: " + str(dictAutomata.get(estado, {})))
             for key, values in dictAutomata.get(estado, {}).items():
-                   print("Key: " + str(key))     
+                   print("")     
 
             if estado in dictAutomata:
                 l = dictAutomata.get(estado, {}).get("lambda")
                 a = dictAutomata.get(estado, {}).get("a")
                 b = dictAutomata.get(estado, {}).get("b")
-            # print("Lambda: " + str(l) + " a: " + str(a) + " b: " + str(b))
                 if l and key == letter:
                     string.pop(0)
                     transitionFunction(l, string)
@@ -169,56 +146,41 @@ def transitionFunction(state, string):
                     transitionFunction(b, string)
                 else:
                     print("No se encontro una transicion con este estado, sacando " + str(state[0]))
-                    # print("Estadossss: " + str(state))
-                    #print("State en el else, antes del pop: "+ str(state))
-                    
                     string.pop(0)
                     state.pop(0)
                     transitionFunction(state, string)
     else:
-        print("Ya no hay letras")
-        print(Automata.finalState)
-        if any (x in state for x in Automata.finalState):
+        print("Ya no hay más letras que validar")
+        #print(Automata.finalState)
+        if any (x in state for x in Automata.finalState): #if any the states when there are no more letter to validate is final, the the string is accepted
             print("El string se acepta")
-        else:
+        else: # else, the string is rejected
             print("El string se rechaza")
 
 
 if __name__ == "__main__":
     
     Automata = buildAutomata('test1.txt') #Method that receives the name of the file to use and returns an Automata class
-    #print(Automata.states)
-    #print(Automata.symbols)
-    #print(Automata.initialState)
-    #print(Automata.finalState)
-    #print(Automata.transitionTable)
     p = str(Automata.states)
-    #print(p)
 
     # ---------- Create the automate dictionary ----------- #
     transitionMatrix = []
     comparar = []
     count = 0
-    #print("Los strings son iguales")
     for i in Automata.transitionTable:
         var1, var2 = Automata.transitionTable[count].split("=>")
-        #var1 = "".join(var1)
-        #var1.strip("=")
         nextState = var2.split(",")
-        #print("Var1: " + str(var1))
         state, symbol = var1.split(",")
-        #print(count)
-        #print("State: "+ str(state)+ " Symbol: "+ str(symbol) + " Regresa:" + str(nextState))
         transitionMatrix += [[state, symbol, nextState]]
         comparar += [state]
         count+=1
 
     test = []
-    print("----- Transition Matrix---------")
-    print(transitionMatrix)
+    #print("----- Transition Matrix---------")
+    #print(transitionMatrix)
 
 
-    print("------Dictionary 1 --------- ")
+    #print("------Dictionary 1 --------- ")
     for i in range(len(transitionMatrix)):
         if transitionMatrix[i][1] == "lambda":
             test += [{"a": 0, "b": 0, "lambda": transitionMatrix[i][2]}]
@@ -234,19 +196,18 @@ if __name__ == "__main__":
 
     repetidos = []
     
-#    print(dictAutomata)
     
-    repetidos = [x for n, x in enumerate(comparar) if x in comparar[:n]]  #find any state that has more than one transition
+    repetidos = [x for n, x in enumerate(comparar) if x in comparar[:n]]  #find any state that has more than one transition and add the to a string
    
-
+    # Compares if any string that is al ready in th dictionary has more than 1 returning state, if so, it adds the missing states to the dictionary
     for r in repetidos:
         for rep in range(len(transitionMatrix)):
             if r == transitionMatrix[rep][0]:
                 dictAutomata[r][transitionMatrix[rep][1]] = transitionMatrix[rep][2]    
-#print("------Dictionary 2 --------- ")
-#print(dictAutomata)
 
-
+# This function receives the following values = transitionFunction(State, ['string'] )
+# State in this case is the initial state for the automata accessed by calling the attribute from the class : Automata.initialState
+# The second atribute is a list of the string to validate, starting with lamba and separated by commas : ['lambda', 'a','b'...,]
 transitionFunction(Automata.initialState, ['lambda', 'b', 'b', 'a'])
 
 
