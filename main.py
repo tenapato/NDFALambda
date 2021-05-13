@@ -182,18 +182,35 @@ def transitionFunction(state, char):
 
 
 def extendedTransitionFunction(state, string):
-    list = lambdaClosure(state)
-    tempStates = []
-    print(list)
     
-    for s in list:
-        transitionFunction(s, 'b')
-    
-
+    if len(string) > 0:
+        list = lambdaClosure(state)
+        tempStates = []
+        
+        #print(list)
+        #list = ["q4", "q3"]
+        #print(list)
+        print("String: " +str(string))
+        char = string[0]
+        for s in list:
+            temp = transitionFunction(s, char)
+            if temp:
+                tempStates+= temp
+        #print(tempStates)
+        lambdaClosure(tempStates)
+        string.pop(0)
+        #print(string)
+        extendedTransitionFunction(tempStates, string)
+    else:
+        print("Se acabo de checar el string")
+        if any (x in state for x in Automata.finalState):
+            print("El string se acepta")
+        else:
+            print("El string se rechaza")
 
 if __name__ == "__main__":
     
-    Automata = buildAutomata('test1.txt') #Method that receives the name of the file to use and returns an Automata class
+    Automata = buildAutomata('test2.txt') #Method that receives the name of the file to use and returns an Automata class
     p = str(Automata.states)
 
     # ---------- Create the automate dictionary ----------- #
@@ -255,5 +272,5 @@ print("Dictionary: " +str(dictAutomata))
 
 #print(transitionFunction('q4', 'a'))
 
-extendedTransitionFunction(Automata.initialState, 'b, b, a')
+extendedTransitionFunction(Automata.initialState, ['a', 'b', 'b', 'a', 'a'])
     
