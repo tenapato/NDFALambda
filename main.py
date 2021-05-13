@@ -82,7 +82,7 @@ def buildAutomata(file):
 
 
 # For documentation refer to line 192
-def transitionFunction(state, string):
+def transitionFunctionMala(state, string):
     print("State to check: "+ str(state))
     #print("Current string to check: "+ str(string))
 
@@ -158,6 +158,39 @@ def transitionFunction(state, string):
             print("El string se rechaza")
 
 
+def lambdaClosure(states):
+    #print(dictAutomata.get(states[0], {}).get("lambda"))
+    returnStates = []
+    for state in states:
+        if dictAutomata.get(state, {}).get("lambda"):
+            returnStates += dictAutomata.get(state, {}).get("lambda")
+        if state not in returnStates:
+            returnStates.append(state)
+
+    #print(returnStates)
+    print("Lambda closure of: " + str(states) + " returns: " + str(returnStates))
+    return returnStates
+
+
+def transitionFunction(state, char):
+    #print(dictAutomata.get(state, {}).get(char))
+    temp = dictAutomata.get(state, {}).get(char)
+    if temp:
+        print("State: " + str(state) + " with char "+ str(char) + " returns: " + str(dictAutomata.get(state, {}).get(char)))
+        return (dictAutomata.get(state, {}).get(char))
+    
+
+
+def extendedTransitionFunction(state, string):
+    list = lambdaClosure(state)
+    tempStates = []
+    print(list)
+    
+    for s in list:
+        transitionFunction(s, 'b')
+    
+
+
 if __name__ == "__main__":
     
     Automata = buildAutomata('test1.txt') #Method that receives the name of the file to use and returns an Automata class
@@ -183,7 +216,7 @@ if __name__ == "__main__":
     #print("------Dictionary 1 --------- ")
     for i in range(len(transitionMatrix)):
         if transitionMatrix[i][1] == "lambda":
-            test += [{"a": 0, "b": 0, "lambda": transitionMatrix[i][2]}]
+            test += [{"lambda": transitionMatrix[i][2]}]
         elif transitionMatrix[i][1] == "b":
             test += [{"b": transitionMatrix[i][2]}]
         elif transitionMatrix[i][1] == "a":
@@ -205,12 +238,22 @@ if __name__ == "__main__":
             if r == transitionMatrix[rep][0]:
                 dictAutomata[r][transitionMatrix[rep][1]] = transitionMatrix[rep][2]    
 
+
 # This function receives the following values = transitionFunction(State, ['string'] )
 # State in this case is the initial state for the automata accessed by calling the attribute from the class : Automata.initialState
 # The second atribute is a list of the string to validate, starting with lamba and separated by commas : ['lambda', 'a','b'...,]
-transitionFunction(Automata.initialState, ['lambda', 'b', 'b', 'a'])
+#transitionFunction(Automata.initialState, ['lambda', 'b', 'b', 'a'])
 
 
+print("Initial State: " + str(Automata.initialState))
+print("Final States: " + str(Automata.finalState))
 
+print("Dictionary: " +str(dictAutomata))
 
+#lambdaClosure(Automata.initialState)
+#lambdaClosure(['q0', 'q3'])
+
+#print(transitionFunction('q4', 'a'))
+
+extendedTransitionFunction(Automata.initialState, 'b, b, a')
     
