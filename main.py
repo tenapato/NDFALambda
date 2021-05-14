@@ -16,8 +16,6 @@ from os import listdir
 from os.path import join, isfile
 import glob
 # Automata class for saving the information extacted from the text file
-
-
 class Automata:
     states = []
     symbols = []
@@ -179,10 +177,10 @@ def extendedTransitionFunction(state, string):
 if __name__ == "__main__":
 
     print("Select file to use (*.txt): " )
-    files = glob.glob("*.txt")
+    files = glob.glob("*.txt")  # Fetches all .txt files from the local directory
     #print(files)
     i = 0
-    for f in files:
+    for f in files:  #Display each txt file as a menu 
         print(str(i) + ") " + str(f))
         i+=1
     selectedFile = int(input())
@@ -191,9 +189,9 @@ if __name__ == "__main__":
 
     dictAutomata = buildDictionary(Automata) #Method that receives an Automata class and turns it into a dictionary of dictionaries
 
-    string = input("Enter the string to validate, separated by commas: ")
+    string = input("Enter the string to validate, separated by commas: ").split(",")
 
-    string = string.split(",")
+    #string = string.split(",")
 
     extendedTransitionFunction(Automata.initialState, string)
     
