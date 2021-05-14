@@ -12,9 +12,12 @@
 
 '''
 
-
-
+from os import listdir
+from os.path import join, isfile
+import glob
 # Automata class for saving the information extacted from the text file
+
+
 class Automata:
     states = []
     symbols = []
@@ -202,15 +205,24 @@ def extendedTransitionFunction(state, string):
         #print(string)
         extendedTransitionFunction(tempStates, string)
     else:
-        print("Se acabo de checar el string")
+        #print("Se acabo de checar el string")
         if any (x in state for x in Automata.finalState):
             print("El string se acepta")
         else:
             print("El string se rechaza")
 
 if __name__ == "__main__":
-    
-    Automata = buildAutomata('test2.txt') #Method that receives the name of the file to use and returns an Automata class
+
+    print("Select file to use (*.txt): " )
+    files = glob.glob("*.txt")
+    #print(files)
+    i = 0
+    for f in files:
+        print(str(i) + ") " + str(f))
+        i+=1
+    selectedFile = int(input())
+
+    Automata = buildAutomata(files[selectedFile]) #Method that receives the name of the file to use and returns an Automata class
     p = str(Automata.states)
 
     # ---------- Create the automate dictionary ----------- #
@@ -261,16 +273,28 @@ if __name__ == "__main__":
 # The second atribute is a list of the string to validate, starting with lamba and separated by commas : ['lambda', 'a','b'...,]
 #transitionFunction(Automata.initialState, ['lambda', 'b', 'b', 'a'])
 
-
+'''  Debugging Prints
 print("Initial State: " + str(Automata.initialState))
 print("Final States: " + str(Automata.finalState))
 
 print("Dictionary: " +str(dictAutomata))
-
+'''
 #lambdaClosure(Automata.initialState)
 #lambdaClosure(['q0', 'q3'])
 
 #print(transitionFunction('q4', 'a'))
 
-extendedTransitionFunction(Automata.initialState, ['a', 'b', 'b', 'a', 'a'])
+#testString =  ['a', 'b', 'b', 'a', 'a'] 
+
+string = input("Enter the string to validate, separated by commas: ")
+
+string = string.split(",")
+
+
+
+#print(string)
+
+#files = [f for f in listdir(path) is isfile(join(path, ))]
+
+extendedTransitionFunction(Automata.initialState, string)
     
