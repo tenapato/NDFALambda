@@ -130,49 +130,63 @@ def buildDictionary(Automata):
 def lambdaClosure(states):  #Method that recives a set of states, applies lambda closure, and returns a set of states
     #print(dictAutomata.get(states[0], {}).get("lambda"))
     returnStates = []
-    for state in states:
-        if dictAutomata.get(state, {}).get("lambda"):
-            returnStates += dictAutomata.get(state, {}).get("lambda")
-        if state not in returnStates:
-            returnStates.append(state)
-
-    #print(returnStates)
-    print("Lambda closure of: " + str(states) + " returns: " + str(returnStates))
+    if states is not None:
+        for state in states:
+            if dictAutomata.get(state, {}).get("lambda"):
+                returnStates += dictAutomata.get(state, {}).get("lambda")
+            if state not in returnStates:
+                returnStates.append(state)
+        print("Lambda closure of: " + str(states) + " returns: " + str(returnStates))
+        
     return returnStates
+
 
 def transitionFunction(state, char): #Method that recieves a state, and a char, applies the transition function and retusn a state
     #print(dictAutomata.get(state, {}).get(char))
     temp = dictAutomata.get(state, {}).get(char)
     if temp:
         print("State: " + str(state) + " with char "+ str(char) + " returns: " + str(dictAutomata.get(state, {}).get(char)))
+        #temp2 = dictAutomata.get(state, {}).get(char)
         return (dictAutomata.get(state, {}).get(char))
+    
     
 def extendedTransitionFunction(state, string): 
     
-    if len(string) > 0:
-        list = lambdaClosure(state)
-        tempStates = []
-        
-        #print(list)
-        #list = ["q4", "q3"]
-        #print(list)
-        print("String: " +str(string))
-        char = string[0]
-        for s in list:
-            temp = transitionFunction(s, char)
-            if temp:
-                tempStates+= temp
-        #print(tempStates)
-        lambdaClosure(tempStates)
-        string.pop(0)
-        #print(string)
-        extendedTransitionFunction(tempStates, string)
+    '''
+    If len == 0:
+        re = lambdaClosure(estado)
+        return res
     else:
-        #print("Se acabo de checar el string")
-        if any (x in state for x in Automata.finalState):
-            print("El string se acepta")
-        else:
-            print("El string se rechaza")
+        Cortar() con un for - separar string a,a,b  --> a,a --> a  --> lambda  string[:-1]
+        var = extendedTransitionFunction()
+        var2 = transitionFunction(var)
+        res = lambdaClosure(var2)
+        return res
+    '''
+    if len(string) == 0:  #Base case
+        res = lambdaClosure(state)
+        print("Res lambda: " + str(res))
+        return res
+    else:
+        # Cortar
+        temp = string[-1]
+        #extendedTransitionFunction(state, )
+        string.pop(len(string)-1)
+        print(string)
+        print(temp)
+        var = extendedTransitionFunction(state, string)
+        print("Var: " + str(var))
+
+        res = []
+        #transitionFunction(var[0], temp)
+        if var is not None:
+            for v in var:
+                print("V: " + str(v))
+                var2 = transitionFunction(v, temp)
+                res += lambdaClosure(var2)  
+            
+        return res
+
 
 if __name__ == "__main__":
 
@@ -188,10 +202,20 @@ if __name__ == "__main__":
     Automata = buildAutomata(files[selectedFile]) #Method that receives the name of the file to use and returns an Automata class
 
     dictAutomata = buildDictionary(Automata) #Method that receives an Automata class and turns it into a dictionary of dictionaries
+    
+    print(dictAutomata)
 
     string = input("Enter the string to validate, separated by commas: ").split(",")
 
     #string = string.split(",")
 
-    extendedTransitionFunction(Automata.initialState, string)
+    ans = extendedTransitionFunction(Automata.initialState, string)
+
+    print("Ans" + str(ans))
+    if ans is not None:
+        if any (x in ans for x in Automata.finalState):
+                print("The string is accepted")
+        else:
+            print("The string is rejected")
+    
     
