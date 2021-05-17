@@ -136,7 +136,7 @@ def lambdaClosure(states):  #Method that recives a set of states, applies lambda
                 returnStates += dictAutomata.get(state, {}).get("lambda")
             if state not in returnStates:
                 returnStates.append(state)
-        print("Lambda closure of: " + str(states) + " returns: " + str(returnStates))
+        print("(LC) Lambda closure of: " + str(states) + " returns: " + str(returnStates))
         
     return returnStates
 
@@ -145,43 +145,32 @@ def transitionFunction(state, char): #Method that recieves a state, and a char, 
     #print(dictAutomata.get(state, {}).get(char))
     temp = dictAutomata.get(state, {}).get(char)
     if temp:
-        print("State: " + str(state) + " with char "+ str(char) + " returns: " + str(dictAutomata.get(state, {}).get(char)))
+        print("(TF) State: " + str(state) + " with char "+ "'"+ str(char) +"'"+ " returns: " + str(dictAutomata.get(state, {}).get(char)))
         #temp2 = dictAutomata.get(state, {}).get(char)
         return (dictAutomata.get(state, {}).get(char))
     
     
 def extendedTransitionFunction(state, string): 
     
-    '''
-    If len == 0:
-        re = lambdaClosure(estado)
-        return res
-    else:
-        Cortar() con un for - separar string a,a,b  --> a,a --> a  --> lambda  string[:-1]
-        var = extendedTransitionFunction()
-        var2 = transitionFunction(var)
-        res = lambdaClosure(var2)
-        return res
-    '''
     if len(string) == 0:  #Base case
         res = lambdaClosure(state)
-        print("Res lambda: " + str(res))
+        #print("Res lambda: " + str(res))
         return res
     else:
         # Cortar
+        print("String: " + str(string))
         temp = string[-1]
-        #extendedTransitionFunction(state, )
         string.pop(len(string)-1)
-        print(string)
-        print(temp)
+        print("String after cut: " + str(string))
+        #print(temp)
         var = extendedTransitionFunction(state, string)
-        print("Var: " + str(var))
+        #print("Var: " + str(var))
 
         res = []
         #transitionFunction(var[0], temp)
         if var is not None:
             for v in var:
-                print("V: " + str(v))
+                
                 var2 = transitionFunction(v, temp)
                 res += lambdaClosure(var2)  
             
@@ -203,19 +192,25 @@ if __name__ == "__main__":
 
     dictAutomata = buildDictionary(Automata) #Method that receives an Automata class and turns it into a dictionary of dictionaries
     
-    print(dictAutomata)
+    #print(dictAutomata)
 
     string = input("Enter the string to validate, separated by commas: ").split(",")
 
-    #string = string.split(",")
+    print(string)
+
+    string2 = []
+    for s in string:
+        string2.append(s)
+    
 
     ans = extendedTransitionFunction(Automata.initialState, string)
 
-    print("Ans" + str(ans))
+    print("Final returning states: " + str(ans))
     if ans is not None:
         if any (x in ans for x in Automata.finalState):
-                print("The string is accepted")
+                print("The string "+ str(string2) +" is accepted")
+                
         else:
-            print("The string is rejected")
+            print("The string "+ str(string2) +" is rejected")
     
     
