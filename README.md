@@ -1,5 +1,5 @@
 # Authors
-  ##### Commit version: 58aa459d509673a0d5ab4ab03a0a14fd0d14955e
+  ##### Commit version: beca649ab670552cd0150c26e2d8adc091c666d1
   
 - Patricio Tena Zozaya A01027293
 - Francisco Acuña Franco A01027294
@@ -9,11 +9,25 @@ is accepted or rejected.
 
 ## Notes: 
 - The string is not separated by commas
-- Example Input: "bba" , "cbzpao"
+- Example Input:
+
+      Enter the string to validate: bba
+  
+
+
 - At the beginig of the program, all *.txt files will be displayed and you'll have to select the file to use by the index of it
+
+        Select file to use (*.txt): 
+        0) test1.txt
+        1) test2.txt
+
+      Index of file: 0  
 - Print Glossary:
   - (TF) : Output of transition function
   - (LC) : Output of lambda closure
+- Final Sample Output:
+
+      The string ['b', 'b', 'a'] is accepted
 - More info about the versions of the program at: https://github.com/tenapato/NDFALambda
 
 
