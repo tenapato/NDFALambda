@@ -178,7 +178,7 @@ if __name__ == "__main__":
     for f in files:  # Display each txt file as a menu 
         print(str(i) + ") " + str(f))
         i+=1
-    selectedFile = int(input())
+    selectedFile = int(input("Index of file: "))
 
     Automata = buildAutomata(files[selectedFile]) #Method that receives the name of the file to use and returns an Automata class
 
