@@ -96,24 +96,24 @@ def buildDictionary(Automata):
         count+=1
 
     test = []
-    #print("----- Transition Matrix---------")
-    #print(transitionMatrix)
 
-
-    #print("------Dictionary 1 --------- ")
+    print("Symbols"  + str(Automata.symbols))
+    
+    
     for i in range(len(transitionMatrix)):
-        if transitionMatrix[i][1] == "lambda":
+        #print("TM: " + str(transitionMatrix[i][1]) + " Symbols: " + str(j))
+        if transitionMatrix[i][1]  == "lambda":
             test += [{"lambda": transitionMatrix[i][2]}]
-        elif transitionMatrix[i][1] == "b":
-            test += [{"b": transitionMatrix[i][2]}]
-        elif transitionMatrix[i][1] == "a":
-            test += [{"a": transitionMatrix[i][2]}]
+        elif transitionMatrix[i][1] in Automata.symbols:
+            test += [{transitionMatrix[i][1]: transitionMatrix[i][2]}]
+            #print(transitionMatrix[i][1])
 
 
     zip_it = zip(comparar, test)
 
     dictAutomata = dict(zip_it)
 
+    #print(dictAutomata)
     repetidos = []
 
 
@@ -181,7 +181,6 @@ if __name__ == "__main__":
 
     print("Select file to use (*.txt): " )
     files = glob.glob("*.txt")  # Fetches all .txt files from the local directory
-    #print(files)
     i = 0
     for f in files:  #Display each txt file as a menu 
         print(str(i) + ") " + str(f))
@@ -192,10 +191,7 @@ if __name__ == "__main__":
 
     dictAutomata = buildDictionary(Automata) #Method that receives an Automata class and turns it into a dictionary of dictionaries
     
-    #print(dictAutomata)
-    
-    #string = input("Enter the string to validate, separated by commas: ").split(",")
-
+    print("Dictionary" + str(dictAutomata))
     string = input("Enter the string to validate: ")
     #print(string)
     stringToSend = []
