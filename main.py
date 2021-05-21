@@ -4,10 +4,11 @@
 
     The following program evaluates a given string in and NDFA-lambda automata given by a text file and returns if the string
     is accepted or rejected.
+    Input should be as follows: bba, abb, bcb, abzca 
 
     *Notes: 
-    - To this version of the program, it only evaluates a normal NDFA automata.
-    - Further changes are needed to implement the lambda closure and fix remaning bugs
+    - The string is not separated by commas
+    - At the beginig of the program, all *.txt files will be displayed and you'll have to select the file to use by the index of it
     - more info about the versions of the program at: https://github.com/tenapato/NDFALambda
 
 '''
@@ -80,7 +81,7 @@ def buildAutomata(file):
     A1.transitionTable = transitionTable
 
     return A1
-
+# Method for creating the dictionaries of the automatas with any kind of symbols
 def buildDictionary(Automata):
     p = str(Automata.states)
     # ---------- Create the automate dictionary ----------- #
@@ -126,8 +127,7 @@ def buildDictionary(Automata):
 
     return dictAutomata
 
-
-def lambdaClosure(states):  #Method that recives a set of states, applies lambda closure, and returns a set of states
+def lambdaClosure(states):  # Method that recives a set of states, applies lambda closure, and returns a set of states
     #print(dictAutomata.get(states[0], {}).get("lambda"))
     returnStates = []
     if states is not None:
@@ -140,7 +140,6 @@ def lambdaClosure(states):  #Method that recives a set of states, applies lambda
         
     return returnStates
 
-
 def transitionFunction(state, char): #Method that recieves a state, and a char, applies the transition function and retusn a state
     #print(dictAutomata.get(state, {}).get(char))
     temp = dictAutomata.get(state, {}).get(char)
@@ -149,28 +148,22 @@ def transitionFunction(state, char): #Method that recieves a state, and a char, 
         #temp2 = dictAutomata.get(state, {}).get(char)
         return (dictAutomata.get(state, {}).get(char))
     
+def extendedTransitionFunction(state, string): # Recursive function that receives a state and retrurns a set of strings
     
-def extendedTransitionFunction(state, string): 
-    
-    if len(string) == 0:  #Base case
+    if len(string) == 0:  # Base case
         res = lambdaClosure(state)
-        #print("Res lambda: " + str(res))
         return res
     else:
-        # Cortar
+        # Cut string
         print("String: " + str(string))
         temp = string[-1]
         string.pop(len(string)-1)
         print("String after cut: " + str(string))
-        #print(temp)
         var = extendedTransitionFunction(state, string)
-        #print("Var: " + str(var))
 
         res = []
-        #transitionFunction(var[0], temp)
         if var is not None:
             for v in var:
-                
                 var2 = transitionFunction(v, temp)
                 res += lambdaClosure(var2)  
             
@@ -182,7 +175,7 @@ if __name__ == "__main__":
     print("Select file to use (*.txt): " )
     files = glob.glob("*.txt")  # Fetches all .txt files from the local directory
     i = 0
-    for f in files:  #Display each txt file as a menu 
+    for f in files:  # Display each txt file as a menu 
         print(str(i) + ") " + str(f))
         i+=1
     selectedFile = int(input())
@@ -193,7 +186,6 @@ if __name__ == "__main__":
     
     print("Dictionary" + str(dictAutomata))
     string = input("Enter the string to validate: ")
-    #print(string)
     stringToSend = []
     for s in string:
         stringToSend.append(s)
@@ -201,10 +193,8 @@ if __name__ == "__main__":
     string2 = []
     for s in string:
         string2.append(s)
-    
 
-    
-    ans = extendedTransitionFunction(Automata.initialState, stringToSend)
+    ans = extendedTransitionFunction(Automata.initialState, stringToSend) # Calling the Recursive Extended Transition Function
 
     print("Final returning states: " + str(ans))
     if ans is not None:
