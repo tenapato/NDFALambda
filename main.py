@@ -193,17 +193,22 @@ if __name__ == "__main__":
     dictAutomata = buildDictionary(Automata) #Method that receives an Automata class and turns it into a dictionary of dictionaries
     
     #print(dictAutomata)
+    
+    #string = input("Enter the string to validate, separated by commas: ").split(",")
 
-    string = input("Enter the string to validate, separated by commas: ").split(",")
-
-    print(string)
+    string = input("Enter the string to validate: ")
+    #print(string)
+    stringToSend = []
+    for s in string:
+        stringToSend.append(s)
 
     string2 = []
     for s in string:
         string2.append(s)
     
 
-    ans = extendedTransitionFunction(Automata.initialState, string)
+    
+    ans = extendedTransitionFunction(Automata.initialState, stringToSend)
 
     print("Final returning states: " + str(ans))
     if ans is not None:
@@ -213,4 +218,4 @@ if __name__ == "__main__":
         else:
             print("The string "+ str(string2) +" is rejected")
     
-    
+ 
