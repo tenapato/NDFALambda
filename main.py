@@ -239,13 +239,13 @@ if __name__ == "__main__":
         help()
 
     print("Select file to use (*.txt): " )
-    files = glob.glob("*.txt")  # Fetches all .txt files from the local directory
+    files = glob.glob("./automataFiles/*.txt")  # Fetches all .txt files from the local directory
     i = 1
 
     #print("0) Help")
 
     for f in files:  # Display each txt file as a menu 
-        print(str(i) + ") " + str(f))
+        print(str(i) + ") " + str(f[16:]))
         i+=1
     
     

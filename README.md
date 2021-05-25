@@ -8,6 +8,10 @@ The following program evaluates a given string in and NDFA-lambda automata given
 is accepted or rejected.
 
 ## Notes: 
+- All automata files **must** be saved in the following folder: 
+
+      ./automataFiles
+
 - Programm will first ask if you want help: 
 
       Would you like help? (y/n)
