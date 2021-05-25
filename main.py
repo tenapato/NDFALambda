@@ -13,6 +13,8 @@
 
 '''
 
+
+
 from os import listdir
 from os.path import join, isfile
 import glob
@@ -26,6 +28,10 @@ class Automata:
 
 # Method for parsing the given text file
 def buildAutomata(file):
+    """
+    Method for parsing the given text file
+    """
+    
     with open(file) as f:
             lines = f.readlines();
 
@@ -81,8 +87,12 @@ def buildAutomata(file):
     A1.transitionTable = transitionTable
 
     return A1
+    
 # Method for creating the dictionaries of the automatas with any kind of symbols
 def buildDictionary(Automata):
+    """
+    Method for creating the dictionaries of the automatas with any kind of symbols
+    """
     p = str(Automata.states)
     # ---------- Create the automate dictionary ----------- #
     transitionMatrix = []
@@ -127,8 +137,17 @@ def buildDictionary(Automata):
 
     return dictAutomata
 
-def lambdaClosure(states):  # Method that recives a set of states, applies lambda closure, and returns a set of states
-    #print(dictAutomata.get(states[0], {}).get("lambda"))
+def lambdaClosure(states):  
+    """
+    Method that recives a set of states, applies lambda closure, and returns a set of states
+    
+    args:
+        states([String]): Check lambda closure four each recieved state
+    
+    return:
+        list of lambda closure for each states
+    """
+    
     returnStates = []
     if states is not None:
         for state in states:
@@ -140,16 +159,35 @@ def lambdaClosure(states):  # Method that recives a set of states, applies lambd
         
     return returnStates
 
-def transitionFunction(state, char): #Method that recieves a state, and a char, applies the transition function and retusn a state
-    #print(dictAutomata.get(state, {}).get(char))
+def transitionFunction(state, char): 
+    """
+    Method that recieves a state, and a char, applies the transition function and returns a state
+    
+    args:
+        state(string): State used as a key value in the automata dictionary
+        char(string): Letter of the given string used as key value in the automata dictionary
+    
+    return:
+        the state of applying the transition fucntion as a string
+    """
+    
     temp = dictAutomata.get(state, {}).get(char)
     if temp:
         print("(TF) State: " + str(state) + " with char "+ "'"+ str(char) +"'"+ " returns: " + str(dictAutomata.get(state, {}).get(char)))
         #temp2 = dictAutomata.get(state, {}).get(char)
         return (dictAutomata.get(state, {}).get(char))
     
-def extendedTransitionFunction(state, string): # Recursive function that receives a state and retrurns a set of strings
+def extendedTransitionFunction(state, string): # 
+    """
+    Recursive function that receives a state and retrurns a set of strings
     
+    args:
+        state(string): Initial state used as a key value for the transition function
+        string(string): String to validate in the given automata
+    
+    return:
+        A set of states
+    """
     if len(string) == 0:  # Base case
         res = lambdaClosure(state)
         return res
@@ -170,17 +208,50 @@ def extendedTransitionFunction(state, string): # Recursive function that receive
         return res
 
 
+def help():
+    
+    while True:
+        print("Enter the index of the function you want know more about:")
+        print("0) Lambda Closure")
+        print("1) Transition Function")
+        print("2) Extended Transition Function")
+        print("3) Exit\n")
+        index = int(input("Index: "))
+        
+        
+        if(index) == 0:
+            print(lambdaClosure.__doc__)
+        if(index) == 1:
+            print(transitionFunction.__doc__)
+        if(index) == 2:
+            print(extendedTransitionFunction.__doc__)
+        if(index) == 3:
+            return False
+
+
+
 if __name__ == "__main__":
+
+
+    op = input("Would you like help? (y/n) ")
+    
+    if op == "y":
+        help()
 
     print("Select file to use (*.txt): " )
     files = glob.glob("*.txt")  # Fetches all .txt files from the local directory
-    i = 0
+    i = 1
+
+    #print("0) Help")
+
     for f in files:  # Display each txt file as a menu 
         print(str(i) + ") " + str(f))
         i+=1
+    
+    
     selectedFile = int(input("Index of file: "))
-
-    Automata = buildAutomata(files[selectedFile]) #Method that receives the name of the file to use and returns an Automata class
+    
+    Automata = buildAutomata(files[selectedFile-1]) #Method that receives the name of the file to use and returns an Automata class
 
     dictAutomata = buildDictionary(Automata) #Method that receives an Automata class and turns it into a dictionary of dictionaries
     
@@ -204,4 +275,4 @@ if __name__ == "__main__":
         else:
             print("The string "+ str(string2) +" is rejected")
     
- 
+    
