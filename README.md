@@ -8,6 +8,21 @@ The following program evaluates a given string in and NDFA-lambda automata given
 is accepted or rejected.
 
 ## Notes: 
+- Programm will first ask if you want help: 
+
+      Would you like help? (y/n)
+      
+    - If you enter "Yes (y)", then the menu will appear:
+
+          Enter the index of the function you want know more about:
+            0) Lambda Closure
+            1) Transition Function
+            2) Extended Transition Function
+            3) Exit
+
+            Index:
+        > It will continue to display until you enter the exit option
+    - If you enter "No (n)" or exit, the rest of the code will continue
 - The string is not separated by commas
 - Example Input:
 
@@ -42,4 +57,4 @@ is accepted or rejected.
 > transitionFunction(state, char)
 - Recursive function that receives a state and retrurns a set of strings:
 > extendedTransitionFunction(state, string)
-- For more detailed information refer to the file main.py
+- For more detailed information refer to the file main.py and say yes to the help menu
